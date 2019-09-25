@@ -1,0 +1,132 @@
+
+
+class Stack:
+    def __init__(self):
+        self.stack = []
+        self.cursor = -1
+
+    def is_empty(self):
+        if self.cursor == -1:
+            return True
+        else:
+            return False
+
+    def push(self, item):
+        self.cursor = self.cursor + 1
+        self.stack.append(item)
+
+    def pop(self):
+        if self.is_empty():
+            print('stack is empty')
+        else:
+            item = self.stack[self.cursor]
+            self.stack.remove(item)
+            self.cursor = self.cursor - 1
+            return item
+
+    def lookup(self):
+        return self.stack[self.cursor]
+
+
+
+def swap(a, b, puz):
+    puz[a], puz[b] = puz[b], puz[a]
+    return puz
+
+
+def action(command, puz):
+    point = puz.index(0)
+    co = puz[:]
+    if command == 'A':
+        if point % 3 != 0:
+            puz = swap(point, point - 1, co)
+            return co
+
+    elif command == 'D':
+        if point % 3 != 2:
+            puz = swap(point, point + 1, co)
+            return co
+
+    elif command == 'W':
+        if point - 3 >= 0:
+            puz = swap(point, point - 3, co)
+            return co
+
+    elif command == 'S':
+        if (point + 3) <= 8:
+            puz = swap(point, point + 3, co)
+            return co
+
+
+def puzzle_completer(puz):
+    if puz == [1, 2, 3, 4, 5, 6, 7, 8, 0]:
+        return True
+    else:
+        return False
+
+
+def puzzle_print(puz):
+    tmp = []
+    for index, value in enumerate(puz):
+        if index % 3 != 2:
+            tmp.append(value)
+        elif index % 3 == 2:
+            tmp.append(value)
+            print(tmp)
+            tmp = []
+
+
+class setting:
+    def __init__(self):
+        # self.p = [x for x in range(9)]
+        # random.shuffle(self.p)
+        self.p = [1, 2, 3, 4, 5, 6, 0, 8, 7]
+        self.visited = []
+        self.st = Stack()
+        self.st.push(self.p)
+
+    def dfs(self):
+        _count = 0
+        _real = False
+
+        while self.st.is_empty() is not True:
+            tp = self.st.pop()
+            if not (tp in self.visited):
+                self.visited.append(tp)
+
+            if puzzle_completer(tp):
+                print('success! count : %d' % _count)
+                puzzle_print(tp)
+                break
+            up = action('W', tp)
+            left = action('A', tp)
+            down = action('S', tp)
+            right = action('D', tp)
+
+            if up is not None:
+                if not (up in self.visited):
+                    self.st.push(up)
+                    # print(_s.lookup())
+                    _count += 1
+            if down is not None:
+                if not (down in self.visited):
+                    self.st.push(down)
+                    # print(_s.lookup())
+                    _count += 1
+            if right is not None:
+                if not (right in self.visited):
+                    self.st.push(right)
+                    # print(_s.lookup())
+                    _count += 1
+            if left is not None:
+                if not (left in self.visited):
+                    self.st.push(left)
+                    # print(_s.lookup())
+                    _count += 1
+
+            print("count : %d  visited : %d" % (_count, len(self.visited)))
+        print('dfs finish')
+
+
+s = setting()
+s.dfs()
