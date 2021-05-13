@@ -3,7 +3,7 @@ import heapq
 def solution(N, road, K):
     answer = 0
     
-    dist = [10001]*(N+1)
+    dist = [999999]*(N+1)
     PriorityQ = []
     heapq.heappush(PriorityQ, (1,0))
     dist[1] = 0
@@ -15,7 +15,7 @@ def solution(N, road, K):
             if start == cnode and cost_evl < dist[end]:
                 dist[end] = cost_evl
                 heapq.heappush(PriorityQ, (end, cost_evl))
-            if end == cnode and cost_evl < dist[start]:
+            elif end == cnode and cost_evl < dist[start]:
                 dist[start] = cost_evl
                 heapq.heappush(PriorityQ, (start, cost_evl))
     
